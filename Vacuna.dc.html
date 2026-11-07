@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mi Cartilla - Información de vacunas</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#1f5f56}a:hover{color:#123a34}
+</style>
+</helmet>
+<div style="min-height: 900px; box-sizing: border-box; background: #f4f4f1; color: #222; font-family: system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 32px; background: #ffffff; border-bottom: 2px solid #222">
+<a href="index.dc.html" style="font-size: 22px; font-weight: 700; color: #222; text-decoration: none">Mi Cartilla</a>
+<nav style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="index.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Perfil</a>
+<a href="Estado.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Estado de vacunación</a>
+<a href="Vacuna.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #222; border-radius: 6px; background: #222; color: #ffffff; text-decoration: none; font-size: 15px">Información de vacunas</a>
+<a href="Historial.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Historial</a>
+</nav>
+</header>
+
+<main style="flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; box-sizing: border-box; padding: 40px 32px; display: flex; flex-direction: column; gap: 32px">
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-size: 32px">Catálogo Informativo de Vacunas</h1>
+<p style="margin: 0; font-size: 16px; color: #555">Consulta detalles técnicos, dosis requeridas y enfermedades que previenen las vacunas incluidas en el esquema nacional.</p>
+</section>
+
+<!-- Vaccines Grid -->
+<section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px">
+
+<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+  <span style="background: #e0f2f1; color: #004d40; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; width: fit-content">0 a 9 AÑOS</span>
+  <h2 style="margin: 0; font-size: 22px">BCG</h2>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Protege contra:</strong> Tuberculosis grave (meníngea y miliar).</p>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Dosis:</strong> Única al nacer o antes de cumplir 1 año.</p>
+</div>
+
+<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+  <span style="background: #e0f2f1; color: #004d40; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; width: fit-content">TODAS LAS ETAPAS</span>
+  <h2 style="margin: 0; font-size: 22px">Hepatitis B</h2>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Protege contra:</strong> Infección por el virus de la hepatitis B y complicaciones hepáticas grave.</p>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Dosis:</strong> 3 dosis (al nacer, 2 y 6 meses).</p>
+</div>
+
+<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+  <span style="background: #e0f2f1; color: #004d40; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; width: fit-content">10 a 19 AÑOS</span>
+  <h2 style="margin: 0; font-size: 22px">VPH</h2>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Protege contra:</strong> Virus del Papiloma Humano y cáncer cervicouterino.</p>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Dosis:</strong> 1 a 2 dosis según grupo de edad.</p>
+</div>
+
+<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+  <span style="background: #e0f2f1; color: #004d40; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; width: fit-content">60 AÑOS O MÁS</span>
+  <h2 style="margin: 0; font-size: 22px">Neumocócica Polivalente</h2>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Protege contra:</strong> Neumonía y bacteremia producida por neumococo.</p>
+  <p style="margin: 0; font-size: 14px; color: #444; line-height: 1.5"><strong>Dosis:</strong> 1 dosis cada 5 años en población de riesgo.</p>
+</div>
+
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

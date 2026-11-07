@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mi Cartilla - Estado de vacunación</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#1f5f56}a:hover{color:#123a34}
+</style>
+</helmet>
+<div style="min-height: 900px; box-sizing: border-box; background: #f4f4f1; color: #222; font-family: system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 32px; background: #ffffff; border-bottom: 2px solid #222">
+<a href="index.dc.html" style="font-size: 22px; font-weight: 700; color: #222; text-decoration: none">Mi Cartilla</a>
+<nav style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="index.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Perfil</a>
+<a href="Estado.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #222; border-radius: 6px; background: #222; color: #ffffff; text-decoration: none; font-size: 15px">Estado de vacunación</a>
+<a href="Vacuna.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Información de vacunas</a>
+<a href="Historial.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Historial</a>
+</nav>
+</header>
+
+<main style="flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; box-sizing: border-box; padding: 40px 32px; display: flex; flex-direction: column; gap: 32px">
+
+<section style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px">
+<div>
+  <span style="background: #1f7a6d; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 700; text-transform: uppercase">Cartilla Activa</span>
+  <h1 id="nombre-paciente" style="margin: 8px 0 4px 0; font-size: 28px">Cargando paciente...</h1>
+  <p id="info-cartilla" style="margin: 0; color: #555; font-size: 15px">Calculando edad y esquema...</p>
+</div>
+<div>
+  <a href="index.dc.html" style="padding: 10px 16px; background: #fff; border: 2px solid #222; border-radius: 6px; color: #222; font-weight: 600; text-decoration: none; font-size: 14px">Elegir otro paciente</a>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 22px">Esquema Actual de Vacunación</h2>
+
+<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+  <div>
+    <h3 style="margin: 0 0 4px 0; font-size: 18px">BCG (Tuberculosis)</h3>
+    <span style="font-size: 14px; color: #666">Dosis: Única (Al nacer)</span>
+  </div>
+  <span style="background: #2e7d32; color: #fff; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 14px">Aplicada</span>
+</div>
+
+<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+  <div>
+    <h3 style="margin: 0 0 4px 0; font-size: 18px">Hepatitis B</h3>
+    <span style="font-size: 14px; color: #666">Dosis: 3ª Dosis</span>
+  </div>
+  <span style="background: #2e7d32; color: #fff; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 14px">Aplicada</span>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+const SUPABASE_URL = 'https://blinniyzzhrrulsdqiif.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_QEbeOMK2LCNmgLy6uCA4Hw_lC74mcc7';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+class Component extends DCLogic {
+  async componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pacienteId = urlParams.get('id');
+
+    if (!pacienteId) {
+      document.getElementById('nombre-paciente').textContent = "Ningún paciente seleccionado";
+      document.getElementById('info-cartilla').textContent = "Por favor regresa al inicio y selecciona o registra un paciente.";
+      return;
+    }
+
+    const { data: paciente, error } = await supabase
+      .from('pacientes')
+      .select('*')
+      .eq('id', pacienteId)
+      .single();
+
+    if (error || !paciente) {
+      document.getElementById('nombre-paciente').textContent = "Paciente no encontrado";
+      return;
+    }
+
+    const nacimiento = new Date(paciente.nacimiento);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const m = hoy.getMonth() - nacimiento.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+
+    let tipoCartilla = "Adultos (20 a 59 años)";
+    if (edad >= 0 && edad <= 9) tipoCartilla = "Niñas y Niños (0 a 9 años)";
+    else if (edad >= 10 && edad <= 19) tipoCartilla = "Adolescentes (10 a 19 años)";
+    else if (edad >= 60) tipoCartilla = "Adultos Mayores (60 años o más)";
+
+    document.getElementById('nombre-paciente').textContent = paciente.nombre;
+    document.getElementById('info-cartilla').innerHTML = `Edad: ${edad} años | Cartilla Asignada: <strong>${tipoCartilla}</strong>`;
+  }
+
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mi Cartilla - Inicio y registro</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#1f5f56}a:hover{color:#123a34}
+</style>
+</helmet>
+<div style="min-height: 900px; box-sizing: border-box; background: #f4f4f1; color: #222; font-family: system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 32px; background: #ffffff; border-bottom: 2px solid #222">
+<a href="index.dc.html" style="font-size: 22px; font-weight: 700; color: #222; text-decoration: none">Mi Cartilla</a>
+<nav style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="index.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #222; border-radius: 6px; background: #222; color: #ffffff; text-decoration: none; font-size: 15px">Perfil</a>
+<a href="Estado.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Estado de vacunación</a>
+<a href="Vacuna.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Información de vacunas</a>
+<a href="Historial.dc.html" style="min-height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border: 2px solid #bbbbbb; border-radius: 6px; color: #222; text-decoration: none; font-size: 15px">Historial</a>
+</nav>
+</header>
+
+<main style="flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; box-sizing: border-box; padding: 40px 32px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+
+<section style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<h1 style="margin: 0; font-size: 38px; line-height: 1.15">Consulta y da seguimiento a las vacunas de tu familia</h1>
+<p style="margin: 0; font-size: 17px; line-height: 1.5; color: #444">Escribe la fecha de nacimiento y te mostramos qué Cartilla Nacional de Salud corresponde, qué vacunas ya registraste y cuáles faltan por revisar.</p>
+
+<form id="form-paciente" style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 20px">Registrar a una persona</h2>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="nombre" style="font-size: 15px; font-weight: 600">Nombre o apodo</label>
+<input id="nombre" type="text" placeholder="Ej. Sofía" required style="min-height: 44px; box-sizing: border-box; padding: 0 12px; font-size: 16px; border: 2px solid #888; border-radius: 6px; background: #ffffff">
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="nacimiento" style="font-size: 15px; font-weight: 600">Fecha de nacimiento</label>
+<input id="nacimiento" type="date" required style="min-height: 44px; box-sizing: border-box; padding: 0 12px; font-size: 16px; border: 2px solid #888; border-radius: 6px; background: #ffffff">
+<span style="font-size: 13px; color: #555">Con este dato el sistema calcula la edad y elige la Cartilla.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="relacion" style="font-size: 15px; font-weight: 600">¿Quién es?</label>
+<select id="relacion" style="min-height: 44px; box-sizing: border-box; padding: 0 12px; font-size: 16px; border: 2px solid #888; border-radius: 6px; background: #ffffff">
+<option value="Soy yo">Soy yo</option>
+<option value="Mi hija o hijo">Mi hija o hijo</option>
+<option value="Otro familiar">Otro familiar</option>
+</select>
+</div>
+
+<button type="submit" style="min-height: 48px; box-sizing: border-box; padding: 0 20px; display: flex; align-items: center; justify-content: center; background: #1f7a6d; color: #ffffff; border: none; border-radius: 6px; font-size: 17px; font-weight: 700; cursor: pointer">Guardar y Ver su Cartilla</button>
+</form>
+</section>
+
+<section style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 20px">Perfiles en la Base de Datos</h2>
+<div id="lista-perfiles" style="display: flex; flex-direction: column; gap: 12px">
+  <div style="background: #ffffff; border: 2px dashed #888; border-radius: 10px; padding: 18px; text-align: center; color: #666;">
+    Cargando perfiles...
+  </div>
+</div>
+
+<div style="background: #fdebd0; border: 2px solid #8a4b00; border-radius: 10px; padding: 14px 18px; font-size: 14px; line-height: 1.5; color: #5c3200">Mi Cartilla es informativa y de seguimiento. No sustituye la Cartilla Nacional de Salud física ni la indicación de un profesional de la salud.</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+const SUPABASE_URL = 'https://blinniyzzhrrulsdqiif.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_QEbeOMK2LCNmgLy6uCA4Hw_lC74mcc7';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+class Component extends DCLogic {
+  componentDidMount() {
+    this.cargarPerfiles();
+    
+    const form = document.getElementById('form-paciente');
+    if (form) {
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const nacimiento = document.getElementById('nacimiento').value;
+        const relacion = document.getElementById('relacion').value;
+
+        const { data, error } = await supabase
+          .from('pacientes')
+          .insert([{ nombre, nacimiento, relacion }])
+          .select();
+
+        if (error) {
+          alert('Error al registrar: ' + error.message);
+        } else {
+          alert('¡Paciente registrado con éxito!');
+          form.reset();
+          this.cargarPerfiles();
+        }
+      };
+    }
+  }
+
+  async cargarPerfiles() {
+    const contenedor = document.getElementById('lista-perfiles');
+    if (!contenedor) return;
+
+    const { data: pacientes, error } = await supabase.from('pacientes').select('*');
+
+    if (error) {
+      contenedor.innerHTML = `<div style="background:#fff; border:2px solid #d32f2f; padding:12px; border-radius:8px; color
