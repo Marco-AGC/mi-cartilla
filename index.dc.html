@@ -95,7 +95,7 @@ class Component extends DCLogic {
 
         const { data, error } = await supabase
           .from('pacientes')
-          .insert([{ nombre, nacimiento, relacion }])
+          .insert([{ nombre: nombre, nacimiento: nacimiento, relacion: relacion }])
           .select();
 
         if (error) {
@@ -113,7 +113,64 @@ class Component extends DCLogic {
     const contenedor = document.getElementById('lista-perfiles');
     if (!contenedor) return;
 
-    const { data: pacientes, error } = await supabase.from('pacientes').select('*');
+    const respuesta = await supabase.from('pacientes').select('*');
+    const pacientes = respuesta.data;
+    const error = respuesta.error;
 
     if (error) {
-      contenedor.innerHTML = `<div style="background:#fff; border:2px solid #d32f2f; padding:12px; border-radius:8px; color
+      contenedor.innerHTML = '<div style="background:#fff; border:2px solid #d32f2f; padding:12px; border-radius:8px; color:#d32f2f;">Error al cargar: ' + error.message + '</div>';
+      return;
+    }
+
+    if (!pacientes || pacientes.length === 0) {
+      contenedor.innerHTML = '<div style="background:#fff; border:2px solid #888; padding:18px; border-radius:10px; text-align:center;">No hay pacientes registrados.</div>';
+      return;
+    }
+
+    var htmlFinal = '';
+    for (var i = 0; i < pacientes.length; i++) {
+      var p = pacientes[i];
+      var nacimiento = new Date(p.nacimiento);
+      var hoy = new Date();
+      var edad = hoy.getFullYear() - nacimiento.getFullYear();
+      var m = hoy.getMonth() - nacimiento.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+
+      var rangoEdad = "Adultos (20 a 59 años)";
+      var etiquetaRango = "Adultos";
+      if (edad >= 0 && edad <= 9) { 
+        rangoEdad = "0 a 9 años"; 
+        etiquetaRango = "Niñas y niños"; 
+      } else if (edad >= 10 && edad <= 19) { 
+        rangoEdad = "10 a 19 años"; 
+        etiquetaRango = "Adolescentes"; 
+      } else if (edad >= 60) { 
+        rangoEdad = "60 años o más"; 
+        etiquetaRango = "Adultos mayores"; 
+      }
+
+      htmlFinal += '<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 6px">' +
+        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+          '<span style="font-size: 20px; font-weight: 700">' + p.nombre + '</span>' +
+          '<span style="background: #e0f2f1; color: #004d40; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700">' + rangoEdad + '</span>' +
+        '</div>' +
+        '<div style="font-size: 14px; color: #555">Edad: ' + edad + ' años (' + etiquetaRango + ') | Relación: ' + p.relacion + '</div>' +
+        '<div style="display: flex; gap: 8px; margin-top: 8px;">' +
+          '<a href="Estado.dc.html?id=' + p.id + '" style="padding: 8px 12px; background: #1f7a6d; color: #fff; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600">Ver Estado</a>' +
+          '<a href="Historial.dc.html?id=' + p.id + '" style="padding: 8px 12px; background: #222; color: #fff; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600">Ver Historial</a>' +
+        '</div>' +
+      '</div>';
+    }
+
+    contenedor.innerHTML = htmlFinal;
+  }
+
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
