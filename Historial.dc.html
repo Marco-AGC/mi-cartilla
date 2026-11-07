@@ -5,6 +5,7 @@
 <title>Mi Cartilla - Historial</title>
 <script src="./vendor/react.js"></script>
 <script src="./vendor/react-dom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -29,76 +30,94 @@ a{color:#1f5f56}a:hover{color:#123a34}
 
 <main style="flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; box-sizing: border-box; padding: 40px 32px; display: flex; flex-direction: column; gap: 32px">
 
-<!-- Patient Info Header -->
+<!-- Encabezado del paciente seleccionado -->
 <section style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px">
 <div>
-  <span style="background: #1f7a6d; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 700; text-transform: uppercase">Paciente Seleccionado</span>
-  <h1 style="margin: 8px 0 4px 0; font-size: 28px">Sofía González</h1>
-  <p style="margin: 0; color: #555; font-size: 15px">Registro clínico y bitácora de dosis aplicadas de la base de datos.</p>
+  <span style="background: #222; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 700; text-transform: uppercase">Historial Clínico</span>
+  <h1 id="nombre-paciente" style="margin: 8px 0 4px 0; font-size: 28px">Cargando paciente...</h1>
+  <p id="info-paciente" style="margin: 0; color: #555; font-size: 15px">Obteniendo registros...</p>
 </div>
 <div>
-  <a href="index.dc.html" style="padding: 10px 16px; background: #fff; border: 2px solid #222; border-radius: 6px; color: #222; font-weight: 600; text-decoration: none; font-size: 14px">Cambiar de paciente</a>
+  <a href="index.dc.html" style="padding: 10px 16px; background: #fff; border: 2px solid #222; border-radius: 6px; color: #222; font-weight: 600; text-decoration: none; font-size: 14px">Elegir otro paciente</a>
 </div>
 </section>
 
-<!-- History Table (Linked to Patient) -->
+<!-- Contenido del historial -->
 <section style="display: flex; flex-direction: column; gap: 16px">
-<h2 style="margin: 0; font-size: 22px">Historial de Aplicaciones del Paciente</h2>
+<h2 style="margin: 0; font-size: 22px">Registro de Aplicaciones</h2>
 
-<div style="background: #ffffff; border: 2px solid #222; border-radius: 10px; overflow: hidden">
-<table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 15px">
-  <thead>
-    <tr style="background: #222; color: #ffffff">
-      <th style="padding: 14px 20px">Fecha de Aplicación</th>
-      <th style="padding: 14px 20px">Vacuna</th>
-      <th style="padding: 14px 20px">Dosis</th>
-      <th style="padding: 14px 20px">Lote</th>
-      <th style="padding: 14px 20px">Unidad Médica / Clínica</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style="border-bottom: 1px solid #ddd">
-      <td style="padding: 14px 20px">15/03/2024</td>
-      <td style="padding: 14px 20px; font-weight: 600">Pentavalente Acelular</td>
-      <td style="padding: 14px 20px">4ª Dosis</td>
-      <td style="padding: 14px 20px; font-family: monospace">#PT88391</td>
-      <td style="padding: 14px 20px">UFM No. 15</td>
-    </tr>
-    <tr style="border-bottom: 1px solid #ddd">
-      <td style="padding: 14px 20px">10/11/2023</td>
-      <td style="padding: 14px 20px; font-weight: 600">Influenza Estacional</td>
-      <td style="padding: 14px 20px">Anual</td>
-      <td style="padding: 14px 20px; font-family: monospace">#INF-2023-A</td>
-      <td style="padding: 14px 20px">Centro de Salud Urbano</td>
-    </tr>
-    <tr style="border-bottom: 1px solid #ddd">
-      <td style="padding: 14px 20px">05/02/2021</td>
-      <td style="padding: 14px 20px; font-weight: 600">Rotavirus</td>
-      <td style="padding: 14px 20px">3ª Dosis</td>
-      <td style="padding: 14px 20px; font-family: monospace">#RV-4491</td>
-      <td style="padding: 14px 20px">UFM No. 15</td>
-    </tr>
-    <tr>
-      <td style="padding: 14px 20px">20/10/2020</td>
-      <td style="padding: 14px 20px; font-weight: 600">BCG</td>
-      <td style="padding: 14px 20px">Única</td>
-      <td style="padding: 14px 20px; font-family: monospace">#BCG-00129</td>
-      <td style="padding: 14px 20px">Hospital General</td>
-    </tr>
-  </tbody>
-</table>
+<div id="contenedor-historial" style="background: #ffffff; border: 2px solid #222; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+  <div style="color: #666; text-align: center;">Cargando historial de vacunas...</div>
 </div>
 </section>
 
 </main>
 </div>
 </x-dc>
+
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+const SUPABASE_URL = 'https://blinniyzzhrrulsdqiif.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_QEbeOMK2LCNmgLy6uCA4Hw_lC74mcc7';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 class Component extends DCLogic {
-renderVals() {
-return {};
-}
+  async componentDidMount() {
+    // 1. Capturar el ID de la URL (?id=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pacienteId = urlParams.get('id');
+
+    if (!pacienteId) {
+      document.getElementById('nombre-paciente').textContent = "Ningún paciente seleccionado";
+      document.getElementById('info-paciente').textContent = "Por favor regresa al inicio y selecciona un perfil.";
+      document.getElementById('contenedor-historial').innerHTML = '<div style="color:#d32f2f;">No se especificó ningún ID de paciente en la URL.</div>';
+      return;
+    }
+
+    // 2. Consultar los datos del paciente específico en Supabase usando su ID
+    const respuestaPaciente = await supabase
+      .from('pacientes')
+      .select('*')
+      .eq('id', pacienteId)
+      .single();
+
+    var paciente = respuestaPaciente.data;
+    var errorPaciente = respuestaPaciente.error;
+
+    if (errorPaciente || !paciente) {
+      document.getElementById('nombre-paciente').textContent = "Paciente no encontrado";
+      document.getElementById('info-paciente').textContent = "El ID proporcionado no existe en la base de datos.";
+      return;
+    }
+
+    // Calcular edad actual
+    var nacimiento = new Date(paciente.nacimiento);
+    var hoy = new Date();
+    var edad = hoy.getFullYear() - nacimiento.getFullYear();
+    var m = hoy.getMonth() - nacimiento.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+
+    // Mostrar la información real del paciente en el encabezado
+    document.getElementById('nombre-paciente').textContent = paciente.nombre;
+    document.getElementById('info-paciente').innerHTML = 'Relación: ' + paciente.relacion + ' | Fecha de nacimiento: ' + paciente.nacimiento + ' (' + edad + ' años)';
+
+    // 3. Aquí puedes cargar el historial de vacunas filtrado por este paciente si tienes otra tabla (ej. 'historial')
+    // Por ahora, mostramos una estructura dinámica basada en sus datos:
+    var historialHtml = '<div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">' +
+      '<div><strong>Registro inicial de perfil creado</strong><br><span style="font-size: 13px; color: #666;">Fecha de registro en sistema</span></div>' +
+      '<span style="color: #1f7a6d; font-weight: 600;">Completado</span>' +
+    '</div>';
+
+    document.getElementById('contenedor-historial').innerHTML = historialHtml;
+  }
+
+  renderVals() {
+    return {};
+  }
 }
 </script>
+</body>
+</html>
 </body>
 </html>
